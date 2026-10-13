@@ -79,9 +79,27 @@ public struct ImageConfiguration: Equatable {
 }
 
 public protocol ImageProvider: Equatable {
-    func resolve(configuration: ImageConfiguration) -> AsyncStream<NativeImage>
+    /// Resolves this provider into a stream of decoded images.
+    ///
+    /// The stream throws an ``ImageProviderError`` (or a transport error from
+    /// `fetch`) if the image could not be loaded or decoded.
+    func resolve(configuration: ImageConfiguration) -> AsyncThrowingStream<NativeImage, Error>
 
     func isEqualTo(_ other: any ImageProvider) -> Bool
+}
+
+/// Errors that can occur while resolving an ``ImageProvider``.
+public enum ImageProviderError: Error, CustomStringConvertible {
+    /// The downloaded/in-memory data could not be decoded into an image.
+    case decodeFailed(url: URL?)
+
+    /// A human-readable description of the error.
+    public var description: String {
+        switch self {
+        case .decodeFailed(let url):
+            return "Failed to decode image data\(url.map { " from \($0.absoluteString)" } ?? "")"
+        }
+    }
 }
 
 extension ImageProvider {
@@ -94,31 +112,31 @@ extension ImageProvider {
 }
 
 // Decode and stream an image from a data provider.
-private func decodeAndStreamImage(from dataProvider: @escaping () async throws -> Data)
-    -> AsyncStream<NativeImage>
+private func decodeAndStreamImage(from url: URL?, dataProvider: @escaping () async throws -> Data)
+    -> AsyncThrowingStream<NativeImage, Error>
 {
-    AsyncStream { continuation in
-        Task {
-            let data: Data
+    AsyncThrowingStream { continuation in
+        let task = Task {
             do {
-                data = try await dataProvider()
-            } catch {
-                // Optionally handle error (e.g., log or yield a placeholder image)
-                return
-            }
-            let animatedImage = backend.renderer.decodeImageFromData(data)
-            guard let animatedImage else {
-                return
-            }
-            while let frame = animatedImage.getNextFrame() {
-                continuation.yield(frame.image)
-                if let duration = frame.duration {
-                    try? await Task.sleep(for: duration)
-                } else {
-                    break
+                let data = try await dataProvider()
+                guard let animatedImage = backend.renderer.decodeImageFromData(data) else {
+                    throw ImageProviderError.decodeFailed(url: url)
                 }
+                while let frame = animatedImage.getNextFrame() {
+                    continuation.yield(frame.image)
+                    guard let duration = frame.duration else { break }
+                    try Task.checkCancellation()
+                    try await Task.sleep(for: duration)
+                }
+                continuation.finish()
+            } catch is CancellationError {
+                continuation.finish()
+            } catch {
+                NSLog("[ImageProvider] fetch failed: \(error)")
+                continuation.finish(throwing: error)
             }
         }
+        continuation.onTermination = { _ in task.cancel() }
     }
 }
 
@@ -129,8 +147,8 @@ public struct NetworkImage: Equatable, ImageProvider {
 
     public let url: URL
 
-    public func resolve(configuration: ImageConfiguration) -> AsyncStream<NativeImage> {
-        decodeAndStreamImage(from: { try await fetch(self.url) })
+    public func resolve(configuration: ImageConfiguration) -> AsyncThrowingStream<NativeImage, Error> {
+        decodeAndStreamImage(from: self.url) { try await fetch(self.url) }
     }
 }
 
@@ -141,7 +159,7 @@ public struct MemoryImage: Equatable, ImageProvider {
 
     public let data: Data
 
-    public func resolve(configuration: ImageConfiguration) -> AsyncStream<NativeImage> {
-        decodeAndStreamImage(from: { self.data })
+    public func resolve(configuration: ImageConfiguration) -> AsyncThrowingStream<NativeImage, Error> {
+        decodeAndStreamImage(from: nil) { self.data }
     }
 }

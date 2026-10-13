@@ -46,6 +46,16 @@ public typealias ImageFrameBuilder = (
     _ wasSynchronouslyLoaded: Bool
 ) -> Widget
 
+/// Signature used by ``Image/errorBuilder`` to build a widget to display when
+/// the image fails to load.
+///
+/// The `error` argument is the error that occurred while resolving or decoding
+/// the image. This builder must not return null.
+public typealias ImageErrorWidgetBuilder = (
+    _ context: BuildContext,
+    _ error: Error
+) -> Widget
+
 /// A widget that displays an image.
 ///
 /// Several constructors are provided for the various ways that an image can be
@@ -75,7 +85,8 @@ public final class Image: StatefulWidget {
         gaplessPlayback: Bool = false,
         // semanticLabel: String? = nil,
         // excludeFromSemantics: Bool,
-        isAntiAlias: Bool = false
+        isAntiAlias: Bool = false,
+        errorBuilder: ImageErrorWidgetBuilder? = nil
     ) {
         self.image = image
         self.frameBuilder = frameBuilder
@@ -94,6 +105,7 @@ public final class Image: StatefulWidget {
         // self.semanticLabel = semanticLabel
         // self.excludeFromSemantics = excludeFromSemantics
         self.isAntiAlias = isAntiAlias
+        self.errorBuilder = errorBuilder
     }
 
     public static func network(
@@ -113,7 +125,8 @@ public final class Image: StatefulWidget {
         gaplessPlayback: Bool = false,
         // semanticLabel: String? = nil,
         // excludeFromSemantics: Bool,
-        isAntiAlias: Bool = false
+        isAntiAlias: Bool = false,
+        errorBuilder: ImageErrorWidgetBuilder? = nil
     ) -> Image {
         Image(
             image: NetworkImage(url: url),
@@ -132,7 +145,8 @@ public final class Image: StatefulWidget {
             gaplessPlayback: gaplessPlayback,
             // semanticLabel: semanticLabel,
             // excludeFromSemantics: excludeFromSemantics,
-            isAntiAlias: isAntiAlias
+            isAntiAlias: isAntiAlias,
+            errorBuilder: errorBuilder
         )
     }
 
@@ -153,7 +167,8 @@ public final class Image: StatefulWidget {
         gaplessPlayback: Bool = false,
         // semanticLabel: String? = nil,
         // excludeFromSemantics: Bool,
-        isAntiAlias: Bool = false
+        isAntiAlias: Bool = false,
+        errorBuilder: ImageErrorWidgetBuilder? = nil
     ) -> Image {
         Image(
             image: MemoryImage(data: data),
@@ -172,7 +187,8 @@ public final class Image: StatefulWidget {
             gaplessPlayback: gaplessPlayback,
             // semanticLabel: semanticLabel,
             // excludeFromSemantics: excludeFromSemantics,
-            isAntiAlias: isAntiAlias
+            isAntiAlias: isAntiAlias,
+            errorBuilder: errorBuilder
         )
     }
 
@@ -261,10 +277,9 @@ public final class Image: StatefulWidget {
 
     /// A builder function that is called if an error occurs during image loading.
     ///
-    /// If this builder is not provided, any exceptions will be reported to
-    /// [FlutterError.onError]. If it is provided, the caller should either handle
-    /// the exception by providing a replacement widget, or rethrow the exception.
-    // public let errorBuilder: ImageErrorWidgetBuilder?
+    /// If this builder is not provided, the error is logged and the image
+    /// occupies an empty box of the requested size.
+    public let errorBuilder: ImageErrorWidgetBuilder?
 
     /// If non-null, require the image to have this width (in logical pixels).
     ///
@@ -479,8 +494,11 @@ public final class ImageState: State<Image> {
 
     var listener: Task<(), Never>?
 
+    private var error: Error?
+
     private func resolveImage() {
         frameNumber = 0
+        error = nil
 
         let size: Size? =
             if let width = widget.width, let height = widget.height {
@@ -496,12 +514,19 @@ public final class ImageState: State<Image> {
         let stream = widget.image.resolve(configuration: configuration)
 
         listener = Task {
-            for await image in stream {
-                if Task.isCancelled {
-                    return
+            do {
+                for try await image in stream {
+                    if Task.isCancelled {
+                        return
+                    }
+                    backend.runOnMainThread { [self] in
+                        handleImageFrame(image)
+                    }
                 }
+            } catch {
+                if Task.isCancelled { return }
                 backend.runOnMainThread { [self] in
-                    handleImageFrame(image)
+                    setState { self.error = error }
                 }
             }
         }
@@ -514,11 +539,21 @@ public final class ImageState: State<Image> {
     private func handleImageFrame(_ image: NativeImage) {
         setState {
             self.image = image
+            self.error = nil
             frameNumber += 1
         }
     }
 
     public override func build(context: BuildContext) -> Widget {
+        if let error = error {
+            if let errorBuilder = widget.errorBuilder {
+                return errorBuilder(context, error)
+            }
+            return SizedBox(width: widget.width, height: widget.height) {
+                Text("[Image] failed to load \(widget.image): \(error)")
+            }
+        }
+        
         var result: Widget = RawImage(
             // Do not clone the image, because RawImage is a stateless wrapper.
             // The image will be disposed by this state object when it is not needed

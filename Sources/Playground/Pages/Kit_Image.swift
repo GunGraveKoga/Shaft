@@ -1,5 +1,6 @@
 import Foundation
 import Shaft
+import ShaftLucide
 
 final class Kit_Image: StatefulWidget {
     func createState() -> some State<Kit_Image> {
@@ -26,7 +27,7 @@ final class Kit_ImageState: State<Kit_Image> {
 
             Text(
                 """
-                To display an image, use the Image` widget. The image can be loaded \
+                To display an image, use the `Image` widget. The image can be loaded \
                 from a URL or from a local file.
                 """
             )
@@ -34,11 +35,23 @@ final class Kit_ImageState: State<Kit_Image> {
 
             CodeSection(
                 """
-                Image.network(url: URL(string: "https://cataas.com/cat")!)
+                Image.network(url: URL(string: "https://picsum.photos/300")!, width: 300, height: 300)
                 """
             )
 
-            Image.network(url: URL(string: "https://cataas.com/cat")!)
+            Image.network(
+                url: URL(string: "https://picsum.photos/300")!, 
+                width: 300, 
+                height: 300,
+                errorBuilder: { context, error in
+                    SizedBox(width: 300, height: 300) {
+                        Column {
+                            LucideIcon("image-off", size: 48, color: .init(0xFF_D3D3D3))
+                            Text("Error: \(error)")
+                        }
+                    }
+                }
+            )
         }
     }
 }

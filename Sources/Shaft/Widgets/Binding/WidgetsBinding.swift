@@ -607,7 +607,7 @@ public func runPlainApp(_ app: Widget, view: NativeView? = nil) {
     // SchedulerBinding.shared.addPostFrameCallback {
     //     mark("post frame")
     // }
-    SchedulerBinding.shared.scheduleFrame()
+    SchedulerBinding.shared.scheduleWarmUpFrame()
 
     backend.run()
 }

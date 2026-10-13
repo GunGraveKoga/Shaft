@@ -126,6 +126,7 @@ public class RendererBinding {
         for view in renderViews {
             view.reassemble()
         }
+        SchedulerBinding.shared.scheduleWarmUpFrame()
         // scheduleWarmUpFrame()
         // await endOfFrame
     }

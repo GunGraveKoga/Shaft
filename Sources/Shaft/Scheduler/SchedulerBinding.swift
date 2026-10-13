@@ -88,8 +88,8 @@ public class SchedulerBinding {
     /// Ensures callbacks for ``PlatformDispatcher/onBeginFrame`` and
     /// [PlatformDispatcher.onDrawFrame] are registered.
     private func ensureFrameCallbacksRegistered() {
-        backend.onBeginFrame = handleBeginFrame
-        backend.onDrawFrame = handleDrawFrame
+        backend.onBeginFrame = handleBeginFrameFromEngine
+        backend.onDrawFrame = handleDrawFrameFromEngine
     }
 
     /// Slows down animations by this factor to help in development.
@@ -173,21 +173,13 @@ public class SchedulerBinding {
         )
     }
 
-    /// Called by the engine to prepare the framework to produce a new frame.
-    ///
-    /// This function calls all the transient frame callbacks registered by
-    /// [scheduleFrameCallback].
+    
     private func handleBeginFrame(timeStamp: Duration?) {
 
         firstRawTimeStampInEpoch = firstRawTimeStampInEpoch ?? timeStamp
         currentFrameTimeStamp = adjustForEpoch(timeStamp ?? lastRawTimeStamp)
         if let timeStamp {
             lastRawTimeStamp = timeStamp
-        }
-        if warmUpFrame {
-            assert(!rescheduleAfterWarmUpFrame)
-            rescheduleAfterWarmUpFrame = true
-            return
         }
 
         assert(schedulerPhase == .idle)
@@ -203,13 +195,46 @@ public class SchedulerBinding {
         schedulerPhase = .midFrameMicrotasks
     }
 
+    /// Called by the engine to prepare the framework to produce a new frame.
+    ///
+    /// This function calls all the transient frame callbacks registered by
+    /// [scheduleFrameCallback].
+    private func handleBeginFrameFromEngine(_ timeStamp: Duration) {
+        if warmUpFrame {
+            assert(!rescheduleAfterWarmUpFrame)
+            rescheduleAfterWarmUpFrame = true
+            return
+        }
+        handleBeginFrame(timeStamp: timeStamp)
+    }
+
+    /// Runs the persistent and post-frame callbacks for the current frame.
+    private func handleDrawFrame() {
+        assert(schedulerPhase == .midFrameMicrotasks)
+
+        schedulerPhase = .persistentCallbacks
+        let localPersistentCallbacks = persistentCallbacks
+        for callback in localPersistentCallbacks {
+            callback(currentFrameTimeStamp)
+        }
+
+        schedulerPhase = .postFrameCallbacks
+        let localPostFrameCallbacks = postFrameCallbacks
+        postFrameCallbacks.removeAll()
+        for callback in localPostFrameCallbacks {
+            callback(currentFrameTimeStamp)
+        }
+
+        schedulerPhase = .idle
+    }
+
     /// Called by the engine to produce a new frame.
     ///
     /// This method is called immediately after ``handleBeginFrame``. It calls all
     /// the callbacks registered by [addPersistentFrameCallback], which typically
     /// drive the rendering pipeline, and then calls the callbacks registered by
     /// [addPostFrameCallback].
-    private func handleDrawFrame() {
+    private func handleDrawFrameFromEngine() {
         if rescheduleAfterWarmUpFrame {
             rescheduleAfterWarmUpFrame = false
             // Reschedule in a post-frame callback to allow the draw-frame phase
@@ -228,22 +253,24 @@ public class SchedulerBinding {
             }
             return
         }
-        assert(schedulerPhase == .midFrameMicrotasks)
+        handleDrawFrame()
+    }
 
-        schedulerPhase = .persistentCallbacks
-        let localPersistentCallbacks = persistentCallbacks
-        for callback in localPersistentCallbacks {
-            callback(currentFrameTimeStamp)
+    public func scheduleWarmUpFrame() {
+        if warmUpFrame || schedulerPhase != .idle {
+            return
         }
+        warmUpFrame = true
+        let hadScheduledFrame = hasScheduledFrame
 
-        schedulerPhase = .postFrameCallbacks
-        let localPostFrameCallbacks = postFrameCallbacks
-        postFrameCallbacks.removeAll()
-        for callback in localPostFrameCallbacks {
-            callback(currentFrameTimeStamp)
+        handleBeginFrame(timeStamp: nil)
+        handleDrawFrame()
+
+        resetEpoch()
+        warmUpFrame = false
+        if hadScheduledFrame {
+            scheduleFrame()
         }
-
-        schedulerPhase = .idle
     }
 
     // MARK: - Frame Callbacks

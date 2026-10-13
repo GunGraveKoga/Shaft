@@ -25,6 +25,11 @@ public class SDLOpenGLView: SDLView {
     }
 
     deinit {
+        if let glContext {
+            _ = SDL_GL_MakeCurrent(sdlWindow, sdlGLContext)
+            canvas = nil
+            glContext.dispose()
+        }
         SDL_GL_DestroyContext(sdlGLContext)
     }
 
@@ -36,12 +41,18 @@ public class SDLOpenGLView: SDLView {
     /// recreated whenever the window size changes.
     private var canvas: DirectCanvas!
 
+    private var glContext: GLContext?
+
     /// Recreates the surface to match the current window size.
     ///
     /// This method should only be called on the raster thread to avoid the
     /// surface being destroyed while it is being painted to.
     private func updateCanvas() {
-        canvas = (backend!.renderer as! GLRenderer).createGLCanvas(fbo: 0, size: physicalSize)
+        let renderer = backend!.renderer as! GLRenderer
+        if glContext == nil {
+            glContext = renderer.createGLContext()
+        }
+        canvas = glContext!.createGLCanvas(fbo: 0, size: physicalSize)
     }
 
     /// The actual rendering logic that runs on the raster thread.
@@ -70,5 +81,16 @@ public class SDLOpenGLView: SDLView {
 
         // Present the rendered frame to the screen.
         SDL_GL_SwapWindow(sdlWindow)
+    }
+
+    override func destroy() {
+        if isDestroyed { return }
+        rasterThread.sync {
+            _ = SDL_GL_MakeCurrent(sdlWindow, sdlGLContext)
+            canvas = nil
+            glContext?.dispose()
+            glContext = nil
+        }
+        super.destroy()
     }
 }

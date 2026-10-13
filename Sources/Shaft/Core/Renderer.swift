@@ -18,8 +18,21 @@ public protocol Renderer {
     var fontCollection: FontCollection { get }
 }
 
-public protocol GLRenderer: Renderer {
+/// A handle to a per-view GPU/GL context, used to create canvases that render
+/// into an OpenGL framebuffer.
+///
+/// Each view owns its own context so that Skia's GPU resources are not shared
+/// across windows/threads. Call `dispose()` when the view is destroyed.
+public protocol GLContext: AnyObject {
+    /// Creates a canvas that draws into the framebuffer with id `fbo`.
     func createGLCanvas(fbo: UInt, size: ISize) -> DirectCanvas
+    /// Releases the GPU resources held by this context.
+    func dispose()
+}
+
+public protocol GLRenderer: Renderer {
+    /// Creates a new GPU context for a view.
+    func createGLContext() -> GLContext
 }
 
 #if canImport(Metal)

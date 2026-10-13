@@ -8,11 +8,19 @@ import Shaft
 
 /// An implementation of ``Renderer`` using Skia as the backend.
 public class SkiaGLRenderer: SkiaRenderer, GLRenderer {
-    /// Cached GrDirectContext for creating surfaces.
-    private lazy var glGrDirectContext: GrDirectContext_sp = {
+    /// Creates a per-view Skia GPU context.
+    public func createGLContext() -> GLContext {
         var interface = gr_glinterface_create_native_interface()
-        return gr_direct_context_make_gl(&interface)
-    }()
+        return SkiaGLContext(gr_direct_context_make_gl(&interface))
+    }
+}
+
+/// A ``GLContext`` backed by a Skia `GrDirectContext`.
+public class SkiaGLContext: GLContext {
+
+    private var grDirectContext: GrDirectContext_sp
+
+    init(_ context: GrDirectContext_sp) { self.grDirectContext = context }
 
     public func createGLCanvas(fbo: UInt, size: ISize) -> DirectCanvas {
         let grGLInfo = GrGLFramebufferInfo(
@@ -33,7 +41,7 @@ public class SkiaGLRenderer: SkiaRenderer, GLRenderer {
         let colorSpace = color_space_new_null()
 
         let skSurface = SkSurfaces.WrapBackendRenderTarget(
-            gr_direct_context_unwrap(&glGrDirectContext),  // Gr context
+            gr_direct_context_unwrap(&grDirectContext),  // Gr context
             grRenderTarget,  // render target
             GrSurfaceOrigin.init(1),  // GrSurfaceOrigin.kBottomLeft_GrSurfaceOrigin,
             kRGBA_8888_SkColorType,  // color type
@@ -43,6 +51,12 @@ public class SkiaGLRenderer: SkiaRenderer, GLRenderer {
             nil
         )
 
-        return SkiaCanvas(skSurface, glGrDirectContext, size)
+        return SkiaCanvas(skSurface, grDirectContext, size)
+    }
+
+    /// Flushes and submits any pending GPU work and releases the context.
+    public func dispose() {
+        gr_direct_context_flush_and_submit(&grDirectContext, GrSyncCpu.yes)
+        grDirectContext.reset()
     }
 }

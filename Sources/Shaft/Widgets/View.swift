@@ -377,9 +377,9 @@ private class SubWindowState: State<SubWindow> {
     }
 
     override func dispose() {
-        if let window, let onWindowDestroyed = widget.onWindowDestroyed {
+        if let window {
             backend.destroyView(window)
-            onWindowDestroyed(window)
+            widget.onWindowDestroyed?(window)
         }
         super.dispose()
     }

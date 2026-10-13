@@ -1655,6 +1655,11 @@ public protocol Typeface: AnyObject {
 
     /// Return the family name for this typeface.
     var familyName: String { get }
+
+    /// Whether this typeface was created successfully and can be used to shape
+    /// text. A typeface whose underlying font data could not be parsed returns
+    /// `false`.
+    var isValid: Bool { get }
 }
 
 /// A Typeface at specific size and style.

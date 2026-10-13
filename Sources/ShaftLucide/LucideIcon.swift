@@ -50,8 +50,10 @@ private var iconData: IconsData = loadIcons()
 
 /// Loads and parses icon data from a JSON byte array.
 private func loadIcons() -> IconsData {
-    let fontData = Data(PackageResources.lucide_woff2)
-    let typeface = backend.renderer.fontCollection.makeTypefaceFrom(fontData)
+    guard let typeface = backend.renderer.fontCollection.firstValidTypeface([
+        Data(PackageResources.lucide_woff2),
+        Data(PackageResources.lucide_ttf)
+    ]) else {  fatalError("ShaftLucide: could not load 'lucide' font") }
     backend.renderer.fontCollection.registerTypeface(typeface)
 
     let jsonData = Data(PackageResources.lucide_json)

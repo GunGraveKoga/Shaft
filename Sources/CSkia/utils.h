@@ -141,6 +141,7 @@ void paragraph_unref(Paragraph *paragraph);
 FontCollection_sp sk_fontcollection_new();
 void sk_fontcollection_register_typeface(FontCollection_sp &collection, SkTypeface_sp &typeface);
 SkTypeface_sp sk_typeface_create_from_data(const FontCollection_sp &collection, const char *data, size_t length);
+inline bool sk_typeface_is_valid(const SkTypeface_sp &typeface) { return typeface != nullptr; }
 std::vector<SkTypeface_sp> sk_fontcollection_find_typefaces(const FontCollection_sp &collection, const std::vector<SkString> &families, SkFontStyle style);
 SkTypeface_sp sk_fontcollection_default_fallback(const FontCollection_sp &collection, SkUnichar unicode, SkFontStyle style, const SkString &locale);
 std::vector<SkGlyphID> sk_typeface_get_glyphs(SkTypeface_sp &typeface, const SkUnichar *text, size_t length);

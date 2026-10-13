@@ -249,6 +249,7 @@ let package = Package(
             resources: [
                 .embedInCode("Resource/lucide.json"),
                 .embedInCode("Resource/lucide.woff2"),
+                .embedInCode("Resource/lucide.ttf"),
             ]
         ),
 

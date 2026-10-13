@@ -87,6 +87,9 @@ public class SkiaTypeface: Typeface {
         skstring_c_str(skString, &cString)
         return String(cString: cString!)
     }
+
+    /// Whether the underlying `SkTypeface` is non-null.
+    public var isValid: Bool { sk_typeface_is_valid(typeface) }
 }
 
 extension SkiaTypeface: CustomStringConvertible {

@@ -12,10 +12,7 @@ let package = Package(
         .iOS(.v13),
         .tvOS(.v13),
     ],
-
     products: [
-        // Shaft playground app
-        .executable(name: "Playground", targets: ["Playground"]),
 
         // .executable(name: "WebDemo", targets: ["WebDemo"]),
 
@@ -70,10 +67,6 @@ let package = Package(
             branch: "master"
         ),
         .package(
-            url: "https://github.com/ShaftUI/SwiftReload.git",
-            from: "0.0.1"
-        ),
-        .package(
             url: "https://github.com/swiftlang/swift-markdown.git",
             branch: "main"
         ),
@@ -84,35 +77,6 @@ let package = Package(
     ],
 
     targets: [
-        .executableTarget(
-            name: "Playground",
-            dependencies: [
-                "Fetch",
-                "SwiftMath",
-                "Shaft",
-                "ShaftMarkdown",
-                "ShaftSetup",
-                "ShaftLucide",
-                "ShaftCodeHighlight",
-                .product(
-                    name: "SwiftReload",
-                    package: "SwiftReload",
-                    condition: .when(platforms: [.linux, .macOS])
-                ),
-            ],
-            swiftSettings: [
-                .interoperabilityMode(.Cxx, .when(platforms: [.windows, .linux, .macOS])),
-                .unsafeFlags(["-Xfrontend", "-enable-private-imports"]),
-                .unsafeFlags(["-Xfrontend", "-enable-implicit-dynamic"]),
-            ],
-            linkerSettings: [
-                .unsafeFlags(
-                    ["-Xlinker", "--export-dynamic"],
-                    .when(platforms: [.linux, .android])
-                )
-            ]
-        ),
-
         .target(
             name: "CSkia",
             dependencies: [

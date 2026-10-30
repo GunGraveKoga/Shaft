@@ -1,5 +1,5 @@
 {
-  "originHash" : "6fea88d88479c57bc8b988628aaad9bd13a23c18258dcce26aaee5ca21fda5a2",
+  "originHash" : "8364d2741b8472754a1161383a003f687c362dbeba150c2ec4dc0c657b129bdd",
   "pins" : [
     {
       "identity" : "rainbow",
@@ -65,15 +65,6 @@
       }
     },
     {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax.git",
-      "state" : {
-        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
-        "version" : "602.0.0"
-      }
-    },
-    {
       "identity" : "swiftmath",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ShaftUI/SwiftMath",
@@ -83,30 +74,12 @@
       }
     },
     {
-      "identity" : "swiftreload",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ShaftUI/SwiftReload.git",
-      "state" : {
-        "revision" : "e0b67c14779b880c475de7c3c5e4778b23cf90fa",
-        "version" : "0.0.1"
-      }
-    },
-    {
       "identity" : "swiftsdl3",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GunGraveKoga/SwiftSDL3.git",
       "state" : {
         "branch" : "swiftbuild-build-system",
         "revision" : "9805d8f792f948524b7274c7c0e93abbfa2e143b"
-      }
-    },
-    {
-      "identity" : "yams",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/jpsim/Yams.git",
-      "state" : {
-        "revision" : "b4b8042411dc7bbb696300a34a4bf3ba1b7ad19b",
-        "version" : "5.3.1"
       }
     }
   ],

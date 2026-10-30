@@ -1,4 +1,3 @@
-import Fetch
 import Foundation
 import Observation
 

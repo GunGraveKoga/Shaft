@@ -64,7 +64,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/ShaftUI/swift-collections",
-            .upToNextMinor(from: "1.3.0")
+            from: "1.3.0"//.upToNextMinor(from: "1.3.0")
         ),
         .package(
             url: "https://github.com/ShaftUI/Splash",

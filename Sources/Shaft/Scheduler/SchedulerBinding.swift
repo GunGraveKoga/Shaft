@@ -32,7 +32,8 @@ public enum SchedulerPhase: Comparable {
 }
 
 public class SchedulerBinding {
-    public static let shared = SchedulerBinding()
+    
+    nonisolated(unsafe) public static let shared = SchedulerBinding()
 
     private init() {}
 

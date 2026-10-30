@@ -468,7 +468,7 @@ public final class Image: StatefulWidget {
     }
 }
 
-public final class ImageState: State<Image> {
+public final class ImageState: State<Image>, @unchecked Sendable {
     public override func initState() {
         super.initState()
     }

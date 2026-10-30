@@ -143,7 +143,7 @@ private class _SliverPrototypeExtentListElement: SliverMultiBoxAdaptorElement {
     }
 
     var _prototype: Element?
-    static let _prototypeSlot = UniqueSlot()
+    nonisolated(unsafe) static let _prototypeSlot = UniqueSlot()
 
     override func insertRenderObjectChild(_ child: RenderObject, slot: (any Slot)?) {
         if slotEqual(slot, Self._prototypeSlot) {

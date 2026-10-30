@@ -7,12 +7,12 @@ private enum _AnimationDirection {
     case reverse
 }
 
-private let _kFlingSpringDescription = SpringDescription.withDampingRatio(
+nonisolated(unsafe) private let _kFlingSpringDescription = SpringDescription.withDampingRatio(
     mass: 1.0,
     stiffness: 500.0
 )
 
-private let _kFlingTolerance = Tolerance(
+nonisolated(unsafe) private let _kFlingTolerance = Tolerance(
     distance: 0.01,
     velocity: Double.infinity
 )

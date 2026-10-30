@@ -59,7 +59,7 @@ public enum TextWidthBasis {
 ///  * ``RichText``, a text widget that supports text inline widgets.
 public struct PlaceholderDimensions {
     /// A constant representing an empty placeholder.
-    static var empty = PlaceholderDimensions(size: .zero, alignment: .bottom)
+    static var empty: Self { .init(size: .zero, alignment: .bottom) }
 
     /// Width and height dimensions of the placeholder.
     var size: Size

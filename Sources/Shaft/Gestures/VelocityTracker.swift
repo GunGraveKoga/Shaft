@@ -14,7 +14,7 @@ public struct Velocity: Equatable {
     }
 
     /// A velocity that isn't moving at all.
-    public static let zero = Velocity(pixelsPerSecond: .zero)
+    public static var zero: Self { .init(pixelsPerSecond: .zero) }
 
     /// The number of pixels per second of velocity in the x and y directions.
     public let pixelsPerSecond: Offset

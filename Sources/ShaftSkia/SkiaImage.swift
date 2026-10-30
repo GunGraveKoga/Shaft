@@ -6,7 +6,7 @@ import CSkia
 import Foundation
 import Shaft
 
-public class SkiaImage: NativeImage {
+public final class SkiaImage: NativeImage, @unchecked Sendable {
     public init(skImage: SkImage_sp) {
         self.skImage = skImage
     }

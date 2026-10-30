@@ -34,7 +34,7 @@ public class DefaultTextEditingShortcuts: StatelessWidget {
     // These shortcuts are shared between all platforms except Apple platforms,
     // because they use different modifier keys as the line/word modifier.
     // swift-format-ignore
-    static let _commonShortcuts: [ActivatorIntentPair] = {
+    nonisolated(unsafe) static let _commonShortcuts: [ActivatorIntentPair] = {
       // Delete Shortcuts.
       var shortcuts: [ActivatorIntentPair] = []
       for pressShift in [true, false] {
@@ -121,9 +121,9 @@ public class DefaultTextEditingShortcuts: StatelessWidget {
     //   * Shift + home
     //   * Meta + shift? + delete
     //   * Meta + shift? + backspace
-    static let _androidShortcuts: [ActivatorIntentPair] = _commonShortcuts
+    nonisolated(unsafe) static let _androidShortcuts: [ActivatorIntentPair] = _commonShortcuts
 
-    static let _fuchsiaShortcuts: [ActivatorIntentPair] = _androidShortcuts
+    nonisolated(unsafe) static let _fuchsiaShortcuts: [ActivatorIntentPair] = _androidShortcuts
 
     //   static final List<ActivateIntentPair> _linuxNumpadShortcuts = <ActivateIntentPair>{
     //     // When numLock is on, numpad keys shortcuts require shift to be pressed too.
@@ -195,7 +195,7 @@ public class DefaultTextEditingShortcuts: StatelessWidget {
     // The macOS shortcuts uses different word/line modifiers than most other
     // platforms.
     // swift-format-ignore
-    static let _macShortcuts: [ActivatorIntentPair] = {
+    nonisolated(unsafe) static let _macShortcuts: [ActivatorIntentPair] = {
         var shortcuts: [ActivatorIntentPair] = []
         for pressShift in [true, false] {
           shortcuts += [
@@ -280,7 +280,7 @@ public class DefaultTextEditingShortcuts: StatelessWidget {
       }()
 
     // There is no complete documentation of iOS shortcuts: use macOS ones.
-    static let _iOSShortcuts = _macShortcuts
+    nonisolated(unsafe) static let _iOSShortcuts = _macShortcuts
 
     // The following key combinations have no effect on text editing on this
     // platform:
@@ -294,7 +294,7 @@ public class DefaultTextEditingShortcuts: StatelessWidget {
     //   * Meta + shift? + arrow up
     //   * Meta + delete
     //   * Meta + backspace
-    static let _windowsShortcuts: [ActivatorIntentPair] = {
+    nonisolated(unsafe) static let _windowsShortcuts: [ActivatorIntentPair] = {
         var shortcuts = _commonShortcuts
         // shortcuts += [
         //   (SingleActivator(LogicalKeyboardKey.pageUp), ExtendSelectionVerticallyToAdjacentPageIntent(forward: false, collapseSelection: true)),

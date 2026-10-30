@@ -536,7 +536,7 @@ public struct SliverConstraints: Constraints, Hashable {
 ///
 /// A sliver can occupy space in several different ways, which is why this class
 /// contains multiple values.
-public struct SliverGeometry: Hashable {
+public struct SliverGeometry: Hashable, Sendable {
     /// Creates an object that describes the amount of space occupied by a sliver.
     ///
     /// If the [layoutExtent] argument is null, [layoutExtent] defaults to the

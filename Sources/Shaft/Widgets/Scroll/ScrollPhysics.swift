@@ -382,7 +382,7 @@ public class ScrollPhysics {
         return parent?.createBallisticSimulation(position, velocity)
     }
 
-    private static let _kDefaultSpring = SpringDescription.withDampingRatio(
+    nonisolated(unsafe) private static let _kDefaultSpring = SpringDescription.withDampingRatio(
         mass: 0.5,
         stiffness: 100.0,
         ratio: 1.1

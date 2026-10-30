@@ -115,37 +115,37 @@ public struct FontWeight: Equatable {
     public let value: Int
 
     /// Thin, the least thick.
-    public static let w100 = Self(0, 100)
+    public static var w100: Self { .init(0, 100) }
 
     /// Extra-light.
-    public static let w200 = Self(1, 200)
+    public static var w200: Self { .init(1, 200) }
 
     /// Light.
-    public static let w300 = Self(2, 300)
+    public static var w300: Self { .init(2, 300) }
 
     /// Normal / regular / plain.
-    public static let w400 = Self(3, 400)
+    public static var w400: Self { .init(3, 400) }
 
     /// Medium.
-    public static let w500 = Self(4, 500)
+    public static var w500: Self { .init(4, 500) }
 
     /// Semi-bold.
-    public static let w600 = Self(5, 600)
+    public static var w600: Self { .init(5, 600) }
 
     /// Bold.
-    public static let w700 = Self(6, 700)
+    public static var w700: Self { .init(6, 700) }
 
     /// Extra-bold.
-    public static let w800 = Self(7, 800)
+    public static var w800: Self { .init(7, 800) }
 
     /// Black, the most thick.
-    public static let w900 = Self(8, 900)
+    public static var w900: Self { .init(8, 900) }
 
     /// The default font weight.
-    public static let normal = w400
+    public static var normal: Self { return w400 }
 
     /// A commonly used font weight that is heavier than normal.
-    public static let bold = w700
+    public static var bold: Self { return w700 }
 
     /// Linearly interpolates between two font weights.
     ///
@@ -562,16 +562,16 @@ public struct TextDecoration: OptionSet {
     public var rawValue: Int
 
     /// Do not draw a decoration
-    public static let none = Self([])
+    public static var none: Self { return [] }
 
     /// Draw a line underneath each line of text
-    public static let underline = Self(rawValue: 0x1)
+    public static var underline: Self { .init(rawValue: 0x1) }
 
     /// Draw a line above each line of text
-    public static let overline = Self(rawValue: 0x2)
+    public static var overline: Self { .init(rawValue: 0x2) }
 
     /// Draw a line through each line of text
-    public static let lineThrough = Self(rawValue: 0x4)
+    public static var lineThrough: Self { .init(rawValue: 0x4) }
 }
 
 /// The style in which to draw a text decoration
@@ -604,7 +604,7 @@ public enum TextDecorationStyle {
 /// boxes horizontally, so that they can determine which direction to start in:
 /// either right-to-left, ``TextDirection/rtl``; or left-to-right,
 /// ``TextDirection/ltr``.
-public enum TextDirection {
+public enum TextDirection: Sendable {
     /// The text flows from right to left (e.g. Arabic, Hebrew).
     case rtl
 

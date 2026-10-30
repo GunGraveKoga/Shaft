@@ -26,7 +26,7 @@ struct _AxisSize {
         self._size = Self._convert(size, direction: direction)
     }
 
-    static let empty = _AxisSize(mainAxisExtent: 0.0, crossAxisExtent: 0.0)
+    nonisolated(unsafe) static let empty = _AxisSize(mainAxisExtent: 0.0, crossAxisExtent: 0.0)
 
     private static func _convert(_ size: Size, direction: Axis) -> Size {
         switch direction {

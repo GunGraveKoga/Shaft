@@ -12,7 +12,7 @@
 /// Can be used to debug keyboard issues: each time a key event is received on
 /// the framework side, the event details and the current pressed state will
 /// be printed.
-public var debugPrintKeyboardEvents = false
+nonisolated(unsafe) public var debugPrintKeyboardEvents = false
 
 // When using keyboardDebug, always call it like so:
 //
@@ -103,7 +103,7 @@ public enum KeyboardLockMode {
         }
     }
 
-    private static let knownLockModes: [LogicalKeyboardKey: KeyboardLockMode] = [
+    nonisolated(unsafe) private static let knownLockModes: [LogicalKeyboardKey: KeyboardLockMode] = [
         LogicalKeyboardKey.numLock: .numLock,
         LogicalKeyboardKey.scrollLock: .scrollLock,
         LogicalKeyboardKey.capsLock: .capsLock,
@@ -221,7 +221,7 @@ public class HardwareKeyboard {
     /// This provides access to the shared instance of the `HardwareKeyboard`
     /// class, which manages the state of the hardware keyboard and dispatches
     /// key events.
-    public static let shared = HardwareKeyboard()
+    nonisolated(unsafe) public static let shared = HardwareKeyboard()
 
     private init() {
         backend.onKeyEvent = handleKeyEvent

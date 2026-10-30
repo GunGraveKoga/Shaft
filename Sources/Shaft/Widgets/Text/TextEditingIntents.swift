@@ -306,7 +306,7 @@ public struct SelectAllTextIntent: Intent {
 
 /// An Intent that represents a user interaction that attempts to copy or cut
 /// the current selection in the field.
-public struct CopySelectionTextIntent: Intent {
+public struct CopySelectionTextIntent: Intent, Sendable {
     private init(_ cause: SelectionChangedCause, _ collapseSelection: Bool) {
         self.cause = cause
         self.collapseSelection = collapseSelection
@@ -320,7 +320,7 @@ public struct CopySelectionTextIntent: Intent {
 
     /// An Intent that represents a user interaction that attempts to copy the
     /// current selection in the field.
-    public static let copy = CopySelectionTextIntent(.keyboard, false)
+    nonisolated(unsafe) public static let copy = CopySelectionTextIntent(.keyboard, false)
 
     /// The SelectionChangedCause that triggered the intent.
     public let cause: SelectionChangedCause

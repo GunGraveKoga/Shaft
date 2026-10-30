@@ -834,7 +834,7 @@ open class RenderObject: HitTestTarget, DiagnosticableTree {
     ///
     /// Only valid when asserts are enabled. In release builds, always returns
     /// null.
-    public private(set) static var debugActiveLayout: RenderObject?
+    nonisolated(unsafe) public private(set) static var debugActiveLayout: RenderObject?
 
     /// The depth of this node in the tree.
     ///

@@ -1190,7 +1190,7 @@ public final class EditableText: StatefulWidget {
     /// to appear in the first place.
     ///
     /// Defaults to false, resulting in a typical blinking cursor.
-    public static var debugDeterministicCursor = false
+    nonisolated(unsafe) public static var debugDeterministicCursor = false
 
     public func createState() -> EditableTextState {
         EditableTextState()

@@ -8,7 +8,7 @@
 
 /// Indicates what triggered the change in selected text (including changes to
 /// the cursor location).
-public enum SelectionChangedCause {
+public enum SelectionChangedCause: Sendable {
     /// The user tapped on the text and that caused the selection (or the location
     /// of the cursor) to change.
     case tap
@@ -56,11 +56,7 @@ public struct TextEditingValue: Equatable {
 
     /// A value that corresponds to the empty string with no selection and no
     /// composing range.
-    public static let empty = TextEditingValue(
-        text: "",
-        selection: nil,
-        composing: nil
-    )
+    public static var empty: Self { .init(text: "", selection: nil, composing: nil) }
 
     /// The current text being edited.
     public let text: String

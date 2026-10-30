@@ -114,8 +114,8 @@ public final class CupertinoActivityIndicator: StatefulWidget {
 
 private final class CupertinoActivityIndicatorState: State<CupertinoActivityIndicator> {
     // Extracted from iOS 13.2 Beta.
-    private static let activeTickColor = Color.rgb(60, 60, 68)  // Light mode color
-    private static let activeTickColorDark = Color.rgb(235, 235, 245)  // Dark mode color
+    private static var activeTickColor: Color { return .rgb(60, 60, 68) }  // Light mode color
+    private static var activeTickColorDark: Color { return .rgb(235, 235, 245) }  // Dark mode color
 
     required init() {
         super.init()

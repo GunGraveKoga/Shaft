@@ -140,7 +140,7 @@ open class GestureRecognizer: GestureArenaMember {
 
     /// The default value for [allowedButtonsFilter].
     /// Accept any input.
-    private static let defaultButtonAcceptBehavior: AllowedButtonsFilter = { _ in true }
+    nonisolated(unsafe) private static let defaultButtonAcceptBehavior: AllowedButtonsFilter = { _ in true }
 
     /// Holds a mapping between pointer IDs and the kind of devices they are
     /// coming from.

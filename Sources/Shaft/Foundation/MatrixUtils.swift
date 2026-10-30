@@ -155,7 +155,7 @@ public struct MatrixUtils {
         return Rect(left: _minMax[0], top: _minMax[1], right: _minMax[2], bottom: _minMax[3])
     }
 
-    public static var _minMax = [Float](repeating: 0, count: 4)
+    nonisolated(unsafe) public static var _minMax = [Float](repeating: 0, count: 4)
     public static func _accumulate(
         _ m: Matrix4x4f,
         _ x: Float,

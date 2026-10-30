@@ -46,7 +46,7 @@ private struct IconData: Codable {
 
 /// The loaded icon data from the Lucide JSON resource file.
 /// This is lazily initialized when first accessed.
-private var iconData: IconsData = loadIcons()
+nonisolated(unsafe) private var iconData: IconsData = loadIcons()
 
 /// Loads and parses icon data from a JSON byte array.
 private func loadIcons() -> IconsData {

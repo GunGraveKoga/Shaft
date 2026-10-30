@@ -2,7 +2,7 @@
 import Foundation
 import Shaft
 
-let hackerNewsService = HackerNewsService()
+nonisolated(unsafe) let hackerNewsService = HackerNewsService()
 
 final class HackerNewsApp: StatelessWidget {
     func build(context: BuildContext) -> Widget {
@@ -15,7 +15,7 @@ final class HackerNewsApp: StatelessWidget {
     }
 }
 
-private let searchController = TextEditingController()
+nonisolated(unsafe) private let searchController = TextEditingController()
 
 final class Title: StatelessWidget {
     func build(context: BuildContext) -> Widget {

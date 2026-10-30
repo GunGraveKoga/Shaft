@@ -97,5 +97,5 @@ public struct Curves {
     /// cases where a ``Curve`` is required but no actual curve is desired.
     ///
     /// {@animation 464 192 https://flutter.github.io/assets-for-api-docs/assets/animation/curve_linear.mp4}
-    public static let linear: Curve = _Linear()
+    nonisolated(unsafe) public static let linear: Curve = _Linear()
 }

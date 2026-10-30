@@ -32,7 +32,7 @@ private class DefaultSamplingClock: SamplingClock {
 }
 
 public class GestureBinding: HitTestTarget {
-    public static let shared = GestureBinding()
+    nonisolated(unsafe) public static let shared = GestureBinding()
 
     private init() {
         backend.onPointerData = handlePointerData

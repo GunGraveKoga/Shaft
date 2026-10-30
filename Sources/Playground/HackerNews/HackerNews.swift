@@ -34,7 +34,7 @@ struct HackerNews {
 }
 
 @Observable
-class HackerNewsService {
+class HackerNewsService: @unchecked Sendable {
     init() {
         Task {
             await refresh()

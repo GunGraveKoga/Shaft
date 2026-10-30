@@ -382,7 +382,7 @@ private func sdlEventWatcher(
     import AppKit
 
     private class MenuHandler {
-        public static let shared = MenuHandler()
+        nonisolated(unsafe) public static let shared = MenuHandler()
 
         @objc func handleMenuItemClick(_ sender: NSMenuItem) {
             let action = sender.representedObject as? () -> Void

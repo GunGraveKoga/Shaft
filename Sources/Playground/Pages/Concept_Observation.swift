@@ -245,7 +245,7 @@ class Counter {
     var count = 0
 }
 
-let counter = Counter()
+nonisolated(unsafe) let counter = Counter()
 
 class CounterView: StatelessWidget {
     func build(context: any BuildContext) -> any Widget {
@@ -284,7 +284,7 @@ class ShoppingList {
     }
 }
 
-let shoppingList = ShoppingList()
+nonisolated(unsafe) let shoppingList = ShoppingList()
 
 class ShoppingListView: StatelessWidget {
     func build(context: any BuildContext) -> any Widget {

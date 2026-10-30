@@ -80,7 +80,7 @@ public struct EdgeInsets: EdgeInsetsGeometry, Equatable {
     }
 
     /// An EdgeInsets with zero offsets in each direction.
-    public static let zero = EdgeInsets.only()
+    public static var zero: Self { .only() }
 
     /// The offset from the left.
     let left: Float

@@ -223,7 +223,7 @@ public class SDLBackend: Backend {
 
     // MARK: - View Management
 
-    private static let viewTypes: [TargetPlatform: SDLView.Type] = {
+    nonisolated(unsafe) private static let viewTypes: [TargetPlatform: SDLView.Type] = {
         var types: [TargetPlatform: SDLView.Type] = [:]
         #if canImport(Metal)
             types[.macOS] = SDLMetalView.self
@@ -772,7 +772,8 @@ private class TaskQueue {
 }
 
 private class SDLTimerManager {
-    public static let shared = SDLTimerManager()
+    
+    nonisolated(unsafe) public static let shared = SDLTimerManager()
 
     private struct TimerEntry {
         let delay: Duration

@@ -182,14 +182,14 @@ public struct TextAlignVertical: Equatable {
 
     /// Aligns a TextField's input Text with the topmost location within a
     /// TextField's input box.
-    public static let top = TextAlignVertical(y: -1.0)
+    public static var top: Self { .init(y: -1.0) }
 
     /// Aligns a TextField's input Text to the center of the TextField.
-    public static let center = TextAlignVertical(y: 0.0)
+    public static var center: Self { .init(y: 0.0) }
 
     /// Aligns a TextField's input Text with the bottommost location within a
     /// TextField.
-    public static let bottom = TextAlignVertical(y: 1.0)
+    public static var bottom: Self  { .init(y: 1.0) }
 }
 
 extension TextAlignVertical: CustomStringConvertible {

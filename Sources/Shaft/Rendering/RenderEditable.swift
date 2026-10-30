@@ -13,10 +13,10 @@ private let kCaretHeightOffset: Float = 2.0
 
 // The additional size on the x and y axis with which to expand the prototype
 // cursor to render the floating cursor in pixels.
-private let kFloatingCursorSizeIncrease = EdgeInsets.symmetric(vertical: 1.0, horizontal: 0.5)
+nonisolated(unsafe) private let kFloatingCursorSizeIncrease = EdgeInsets.symmetric(vertical: 1.0, horizontal: 0.5)
 
 // The corner radius of the floating cursor in pixels.
-private let kFloatingCursorRadius = Radius.circular(1.0)
+nonisolated(unsafe) private let kFloatingCursorRadius = Radius.circular(1.0)
 
 // This constant represents the shortest squared distance required between the floating cursor
 // and the regular cursor when both are present in the text field.

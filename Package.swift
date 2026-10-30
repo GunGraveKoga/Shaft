@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.3
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import Foundation
@@ -54,17 +54,16 @@ let package = Package(
             url: "https://github.com/GunGraveKoga/SwiftSDL3.git",
             branch: "swiftbuild-build-system"
         ),
-        // .package(
-        //     name: "SwiftSDL3",
-        //     path: "../SwiftSDL3"
-        // ),
         .package(
             url: "https://github.com/onevcat/Rainbow",
             .upToNextMajor(from: "4.0.0")
         ),
         .package(
-            url: "https://github.com/ShaftUI/swift-collections",
-            from: "1.3.0"//.upToNextMinor(from: "1.3.0")
+            url: "https://github.com/apple/swift-collections.git",
+            from: "1.7.0",
+            traits: [
+                "UnstableSortedCollections",
+            ]
         ),
         .package(
             url: "https://github.com/ShaftUI/Splash",
@@ -191,6 +190,7 @@ let package = Package(
                 "Rainbow",
                 "Fetch",
                 .product(name: "Collections", package: "swift-collections"),
+                .product(name: "SortedCollections", package: "swift-collections"),
             ]
         ),
 

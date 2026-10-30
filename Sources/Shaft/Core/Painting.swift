@@ -1053,7 +1053,7 @@ public struct Shadow: Equatable {
         self.blurRadius = blurRadius
     }
 
-    private static let kColorDefault = Color(0xFF00_0000)
+    nonisolated(unsafe) private static let kColorDefault = Color(0xFF00_0000)
 
     /// Color that the shadow will be drawn with.
     ///
@@ -1213,7 +1213,7 @@ public protocol AnimatedImage: AnyObject {
 ///
 /// To obtain an instance of the [FrameInfo] interface, see
 /// [AnimatedImage.getNextFrame].
-public struct FrameInfo {
+public struct FrameInfo: Sendable {
     public init(duration: Duration?, image: NativeImage) {
         self.duration = duration
         self.image = image
@@ -1235,7 +1235,7 @@ public struct FrameInfo {
 /// Opaque handle to a decoded image that the renderer can use to draw
 /// immidiately. The image can potentially live on the GPU memory based on the
 /// renderer implementation.
-public protocol NativeImage: AnyObject {
+public protocol NativeImage: AnyObject, Sendable {
     /// The number of image pixels along the image's horizontal axis.
     var width: UInt { get }
 

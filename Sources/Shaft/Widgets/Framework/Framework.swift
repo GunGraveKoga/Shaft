@@ -2492,7 +2492,7 @@ public typealias TransitionBuilder = (BuildContext, Widget?) -> Widget
 /// [RenderObject]s indirectly by creating other [Element]s.
 ///
 /// Contrast with [RenderObjectElement].
-public class ComponentElement: Element {
+public class ComponentElement: Element, @unchecked Sendable {
     override init(_ widget: Widget) {
         super.init(widget)
     }
@@ -2574,7 +2574,7 @@ public class ComponentElement: Element {
 }
 
 /// An [Element] that uses a [StatelessWidget] as its configuration.
-public class StatelessElement: ComponentElement {
+public class StatelessElement: ComponentElement, @unchecked Sendable {
     public override init(_ widget: Widget) {
         assert(widget is StatelessWidget)
         super.init(widget)
@@ -2592,7 +2592,7 @@ public class StatelessElement: ComponentElement {
 }
 
 /// An [Element] that uses a [StatefulWidget] as its configuration.
-public class StatefulElement<T: StatefulWidget>: ComponentElement {
+public class StatefulElement<T: StatefulWidget>: ComponentElement, @unchecked Sendable {
     public init(_ widget: T) {
         super.init(widget)
         state = widget.createState()
@@ -2696,7 +2696,7 @@ public class StatefulElement<T: StatefulWidget>: ComponentElement {
 }
 
 /// An [Element] that uses a [ProxyWidget] as its configuration.
-public class ProxyElement: ComponentElement {
+public class ProxyElement: ComponentElement, @unchecked Sendable {
     public override init(_ widget: Widget) {
         assert(widget is ProxyWidget)
         super.init(widget)
@@ -2733,7 +2733,7 @@ public class ProxyElement: ComponentElement {
 }
 
 /// An [Element] that uses a [ParentDataWidget] as its configuration.
-public class ParentDataElement: ProxyElement {
+public class ParentDataElement: ProxyElement, @unchecked Sendable {
     private func applyParentData(_ widget: any ParentDataWidget) {
         // print(type(of: widget).RenderObjectType.self)
         func applyParentDataToChild(_ child: Element) {
@@ -2790,7 +2790,7 @@ public class ParentDataElement: ProxyElement {
     }
 }
 
-public class InheritedElement: ProxyElement {
+public class InheritedElement: ProxyElement, @unchecked Sendable {
     private var dependents: [Element: Any?] = [:]
 
     override func updateInheritance() {
@@ -3342,7 +3342,8 @@ extension RootElementMixin {
 }
 
 private class NullElement: Element {
-    static let shared = NullElement(
+    
+    nonisolated(unsafe) static let shared = NullElement(
         NullWidget()
     )
 }

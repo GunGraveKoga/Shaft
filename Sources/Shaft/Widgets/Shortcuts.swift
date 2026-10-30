@@ -6,10 +6,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-private let controlSynonyms = LogicalKeyboardKey.expandSynonyms(Set([LogicalKeyboardKey.control]))
-private let shiftSynonyms = LogicalKeyboardKey.expandSynonyms(Set([LogicalKeyboardKey.shift]))
-private let altSynonyms = LogicalKeyboardKey.expandSynonyms(Set([LogicalKeyboardKey.alt]))
-private let metaSynonyms = LogicalKeyboardKey.expandSynonyms(Set([LogicalKeyboardKey.meta]))
+nonisolated(unsafe) private let controlSynonyms = LogicalKeyboardKey.expandSynonyms(Set([LogicalKeyboardKey.control]))
+nonisolated(unsafe) private let shiftSynonyms = LogicalKeyboardKey.expandSynonyms(Set([LogicalKeyboardKey.shift]))
+nonisolated(unsafe) private let altSynonyms = LogicalKeyboardKey.expandSynonyms(Set([LogicalKeyboardKey.alt]))
+nonisolated(unsafe) private let metaSynonyms = LogicalKeyboardKey.expandSynonyms(Set([LogicalKeyboardKey.meta]))
 
 /// Determines how the state of a lock key is used to accept a shortcut.
 public enum LockState {

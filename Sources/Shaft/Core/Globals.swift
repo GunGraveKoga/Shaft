@@ -20,7 +20,7 @@ public var backend: Backend {
         _backend = newValue
     }
 }
-private var _backend: Backend?
+nonisolated(unsafe) private var _backend: Backend?
 
 /// The singleton instance of the ``Renderer`` used by the framework during the
 /// entire lifetime of the application. This is a convenience property that

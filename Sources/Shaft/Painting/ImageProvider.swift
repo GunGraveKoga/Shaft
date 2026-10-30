@@ -57,7 +57,7 @@ public struct ImageConfiguration: Equatable {
     /// An image configuration that provides no additional information.
     ///
     /// Useful when resolving an [ImageProvider] without any context.
-    static let empty = Self()
+    static var empty: Self { Self() }
 
     public func copyWith(
         // bundle: AssetBundle? = nil,
@@ -112,7 +112,7 @@ extension ImageProvider {
 }
 
 // Decode and stream an image from a data provider.
-private func decodeAndStreamImage(from url: URL?, dataProvider: @escaping () async throws -> Data)
+private func decodeAndStreamImage(from url: URL?, dataProvider: @escaping @Sendable () async throws -> Data)
     -> AsyncThrowingStream<NativeImage, Error>
 {
     AsyncThrowingStream { continuation in
@@ -140,7 +140,7 @@ private func decodeAndStreamImage(from url: URL?, dataProvider: @escaping () asy
     }
 }
 
-public struct NetworkImage: Equatable, ImageProvider {
+public struct NetworkImage: Equatable, ImageProvider, Sendable {
     public init(url: URL) {
         self.url = url
     }
@@ -152,7 +152,7 @@ public struct NetworkImage: Equatable, ImageProvider {
     }
 }
 
-public struct MemoryImage: Equatable, ImageProvider {
+public struct MemoryImage: Equatable, ImageProvider, Sendable {
     public init(data: Data) {
         self.data = data
     }

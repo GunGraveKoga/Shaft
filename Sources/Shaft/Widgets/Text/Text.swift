@@ -232,7 +232,7 @@ public final class DefaultTextStyle: InheritedWidget {
         self.child = child()
     }
 
-    public static let fallback = DefaultTextStyle(
+    nonisolated(unsafe) public static let fallback = DefaultTextStyle(
         style: TextStyle(),
         textAlign: nil,
         softWrap: true,
@@ -373,7 +373,7 @@ extension Widget {
 private class NullWidget: StatelessWidget {
     private init() {}
 
-    static let shared = NullWidget()
+    nonisolated(unsafe) static let shared = NullWidget()
 
     func build(context: BuildContext) -> Widget {
         fatalError(

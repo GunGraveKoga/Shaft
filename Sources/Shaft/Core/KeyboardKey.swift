@@ -3754,7 +3754,7 @@ public enum LogicalKeyboardKey: UInt64, CaseIterable, Codable {
 }
 
 // A map of keys to the pseudo-key synonym for that key.
-private let _synonyms: [LogicalKeyboardKey: Set<LogicalKeyboardKey>] = [
+nonisolated(unsafe) private let _synonyms: [LogicalKeyboardKey: Set<LogicalKeyboardKey>] = [
     .shiftLeft: [.shift],
     .shiftRight: [.shift],
     .metaLeft: [.meta],
@@ -3766,7 +3766,7 @@ private let _synonyms: [LogicalKeyboardKey: Set<LogicalKeyboardKey>] = [
 ]
 
 // A map of pseudo-key to the set of keys that are synonyms for that pseudo-key.
-private let _reverseSynonyms: [LogicalKeyboardKey: Set<LogicalKeyboardKey>] = [
+nonisolated(unsafe) private let _reverseSynonyms: [LogicalKeyboardKey: Set<LogicalKeyboardKey>] = [
     .shift: [.shiftLeft, .shiftRight],
     .meta: [.metaLeft, .metaRight],
     .alt: [.altLeft, .altRight],

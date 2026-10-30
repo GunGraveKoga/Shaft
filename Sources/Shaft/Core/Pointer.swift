@@ -161,7 +161,7 @@ public struct PointerButtons: OptionSet {
     ///  * [kTouchContact]: The pointer contacts the touch screen.
     ///  * [kStylusContact]: The stylus contacts the screen.
     ///  * [kPrimaryMouseButton]: The primary mouse button.
-    public static let primaryButton = Self(rawValue: 1 << 0)
+    public static var primaryButton: Self { .init(rawValue: 1 << 0) }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to a cross-device
     /// behavior of "secondary operation".
@@ -170,32 +170,32 @@ public struct PointerButtons: OptionSet {
     ///
     ///  * [kPrimaryStylusButton]: The stylus contacts the screen.
     ///  * [kSecondaryMouseButton]: The secondary mouse button.
-    public static let secondaryButton = Self(rawValue: 1 << 1)
+    public static var secondaryButton: Self { .init(rawValue: 1 << 1) }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to the primary mouse
     /// button.
     ///
     /// The primary mouse button is typically the left button on the top of the
     /// mouse but can be reconfigured to be a different physical button.
-    public static let primaryMouseButton = primaryButton
+    public static var primaryMouseButton: Self { return primaryButton }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to the secondary
     /// mouse button.
     ///
     /// The secondary mouse button is typically the right button on the top of
     /// the mouse but can be reconfigured to be a different physical button.
-    public static let secondaryMouseButton = secondaryButton
+    public static var secondaryMouseButton: Self { return secondaryButton }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to when a stylus
     /// contacting the screen.
-    public static let stylusContact = primaryButton
+    public static var stylusContact: Self { return primaryButton }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to the primary stylus
     /// button.
     ///
     /// The primary stylus button is typically the top of the stylus and near
     /// the tip but can be reconfigured to be a different physical button.
-    public static let primaryStylusButton = secondaryButton
+    public static var primaryStylusButton: Self { return secondaryButton }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to a cross-device
     /// behavior of "tertiary operation".
@@ -207,7 +207,7 @@ public struct PointerButtons: OptionSet {
     ///    considered a tertiary button as the primary button of a stylus already
     ///    corresponds to a "secondary operation" (where stylus contact is the
     ///    primary operation).
-    public static let tertiaryButton = Self(rawValue: 1 << 2)
+    public static var tertiaryButton: Self { .init(rawValue: 1 << 2) }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to the middle mouse
     /// button.
@@ -215,7 +215,7 @@ public struct PointerButtons: OptionSet {
     /// The middle mouse button is typically between the left and right buttons
     /// on the top of the mouse but can be reconfigured to be a different
     /// physical button.
-    public static let middleMouseButton = tertiaryButton
+    public static var middleMouseButton: Self { return tertiaryButton }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to the secondary
     /// stylus button.
@@ -223,25 +223,25 @@ public struct PointerButtons: OptionSet {
     /// The secondary stylus button is typically on the end of the stylus
     /// farthest from the tip but can be reconfigured to be a different physical
     /// button.
-    public static let secondaryStylusButton = tertiaryButton
+    public static var secondaryStylusButton: Self { return tertiaryButton }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to the back mouse
     /// button.
     ///
     /// The back mouse button is typically on the left side of the mouse but can
     /// be reconfigured to be a different physical button.
-    public static let backMouseButton = Self(rawValue: 1 << 3)
+    public static var backMouseButton: Self { .init(rawValue: 1 << 3) }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to the forward mouse
     /// button.
     ///
     /// The forward mouse button is typically on the right side of the mouse but
     /// can be reconfigured to be a different physical button.
-    public static let forwardMouseButton = Self(rawValue: 1 << 4)
+    public static var forwardMouseButton: Self { .init(rawValue: 1 << 4) }
 
     /// The bit of ``PointerEvent/buttons`` that corresponds to the pointer
     /// contacting a touch screen.
-    public static let touchContact = primaryButton
+    public static var touchContact: Self { return primaryButton }
 }
 
 /// Information about the state of a pointer.

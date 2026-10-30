@@ -15,7 +15,7 @@
 /// [GestureBinding] the results are dumped to the console.
 ///
 /// This has no effect in release builds.
-var debugPrintHitTestResults = false
+nonisolated(unsafe) var debugPrintHitTestResults = false
 
 /// Whether to print the details of each mouse hover event to the console.
 ///
@@ -24,7 +24,7 @@ var debugPrintHitTestResults = false
 ///
 /// This has no effect in release builds, and only applies to mouse hover
 /// events.
-var debugPrintMouseHoverEvents = false
+nonisolated(unsafe) var debugPrintMouseHoverEvents = false
 
 /// Prints information about gesture recognizers and gesture arenas.
 ///
@@ -35,7 +35,7 @@ var debugPrintMouseHoverEvents = false
 ///  * [GestureArenaManager], the class that manages gesture arenas.
 ///  * [debugPrintRecognizerCallbacksTrace], for debugging issues with
 ///    gesture recognizers.
-var debugPrintGestureArenaDiagnostics = false
+nonisolated(unsafe) var debugPrintGestureArenaDiagnostics = false
 
 /// Logs a message every time a gesture recognizer callback is invoked.
 ///
@@ -49,7 +49,7 @@ var debugPrintGestureArenaDiagnostics = false
 ///
 ///  * [debugPrintGestureArenaDiagnostics], for debugging issues with gesture
 ///    arenas.
-var debugPrintRecognizerCallbacksTrace = false
+nonisolated(unsafe) var debugPrintRecognizerCallbacksTrace = false
 
 /// Whether to print the resampling margin to the console.
 ///
@@ -63,4 +63,4 @@ var debugPrintRecognizerCallbacksTrace = false
 /// touch event processing.
 ///
 /// This has no effect in release builds.
-var debugPrintResamplingMargin = false
+nonisolated(unsafe) var debugPrintResamplingMargin = false

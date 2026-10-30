@@ -7,7 +7,8 @@
 // found in the LICENSE file.
 
 public class RendererBinding {
-    public static let shared = RendererBinding()
+    
+    nonisolated(unsafe) public static let shared = RendererBinding()
 
     private init() {
         SchedulerBinding.shared.addPersistentFrameCallback(handlePersistentFrameCallback)

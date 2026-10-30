@@ -107,7 +107,8 @@ class RootElement: Element, RootElementMixin {
 }
 
 public class WidgetsBinding {
-    public static let shared = WidgetsBinding()
+    
+    nonisolated(unsafe) public static let shared = WidgetsBinding()
 
     private init() {
         RendererBinding.shared.beforeFrameCallbacks.add(beforeDrawFrame)

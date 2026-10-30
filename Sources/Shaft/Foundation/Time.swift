@@ -18,10 +18,10 @@ extension Duration {
     }
 
     /// The number of microseconds per millisecond.
-    public static var microsecondsPerMillisecond = 1000
+    public static let microsecondsPerMillisecond = 1000
 
     /// The number of milliseconds per second.
-    public static var millisecondsPerSecond = 1000
+    public static let millisecondsPerSecond = 1000
 
     /// The number of seconds per minute.
     ///
@@ -29,10 +29,10 @@ extension Duration {
     /// differ in length because of leap seconds.
     /// The ``Duration`` and ``DateTime`` classes ignore leap seconds
     /// and consider all minutes to have 60 seconds.
-    public static var secondsPerMinute = 60
+    public static let secondsPerMinute = 60
 
     /// The number of minutes per hour.
-    public static var minutesPerHour = 60
+    public static let minutesPerHour = 60
 
     /// The number of hours per day.
     ///
@@ -40,7 +40,7 @@ extension Duration {
     /// of time zone changes due to daylight saving.
     /// The ``Duration`` class is time zone agnostic and
     /// considers all days to have 24 hours.
-    public static var hoursPerDay = 24
+    public static let hoursPerDay = 24
 
     public static var microsecondsPerSecond: Int64 {
         return 1_000_000

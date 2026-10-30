@@ -253,8 +253,8 @@ public struct Locale: Equatable, Hashable {
         "ZR": "CD",  // Zaire; deprecated 1997-07-14
     ]
 
-    private static var _cachedLocale: Locale?
-    private static var _cachedLocaleString: String?
+    nonisolated(unsafe) private static var _cachedLocale: Locale?
+    nonisolated(unsafe) private static var _cachedLocaleString: String?
 
     /// Returns a string representing the locale.
     ///

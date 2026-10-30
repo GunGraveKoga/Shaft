@@ -18,7 +18,7 @@ public struct Tolerance: Hashable {
     public static let _epsilonDefault: Double = 1e-3
 
     /// A default tolerance of 0.001 for all three values.
-    public static let defaultTolerance = Tolerance()
+    nonisolated(unsafe) public static let defaultTolerance = Tolerance()
 
     /// The magnitude of the maximum distance between two points for them to be
     /// considered within tolerance.

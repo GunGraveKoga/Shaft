@@ -51,8 +51,8 @@ let package = Package(
             .upToNextMajor(from: "3.4.0")
         ),
         .package(
-            url: "https://github.com/ShaftUI/SwiftSDL3",
-            exact: "0.1.6"
+            url: "https://github.com/GunGraveKoga/SwiftSDL3.git",
+            branch: "swiftbuild-build-system"
         ),
         // .package(
         //     name: "SwiftSDL3",

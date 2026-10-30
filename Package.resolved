@@ -93,10 +93,10 @@
     {
       "identity" : "swiftsdl3",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ShaftUI/SwiftSDL3",
+      "location" : "https://github.com/GunGraveKoga/SwiftSDL3.git",
       "state" : {
-        "revision" : "64fb16e7b2546cc33aefdad2304f909e08a5e54e",
-        "version" : "0.1.6"
+        "branch" : "swiftbuild-build-system",
+        "revision" : "9805d8f792f948524b7274c7c0e93abbfa2e143b"
       }
     },
     {

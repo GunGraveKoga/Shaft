@@ -34,12 +34,12 @@ final class PlaygroundState: State<Playground> {
         "Markdown": Kit_Markdown(),
         "NavigationSplitView": Kit_NavigationSplitView(),
         "Resizable": Kit_Resizable(),
+        "SelectableText": Kit_SelectableText(),
         "TextField": Kit_TextField(),
         "Typography": Kit_Typography(),
         "Hacker News": HackerNewsApp(),
         "3D Cube": Demo_Cube(),
         "Multi Window": Demo_MultiWindow(),
-            // "Text Field": TextFieldPage.init,
     ]
 
     lazy var selectedPage = ValueNotifier("Observation")
@@ -85,6 +85,7 @@ final class PlaygroundState: State<Playground> {
                     MenuTile("ListView")
                     MenuTile("NavigationSplitView")
                     MenuTile("Resizable")
+                    MenuTile("SelectableText")
                     MenuTile("TextField")
                     MenuTile("Typography")
                     MenuTile("Markdown")

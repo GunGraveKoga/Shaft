@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import Foundation
+
 extension Duration {
     /// Returns the duration in milliseconds.
     public var inMilliseconds: Int64 {
@@ -15,6 +17,13 @@ extension Duration {
         return Int64(
             self.components.seconds * 1_000_000 + self.components.attoseconds / 1_000_000_000_000
         )
+    }
+
+    public var inTimeInterval: TimeInterval {
+        let components = self.components
+        let seconds = TimeInterval(components.seconds)
+        let fractionalSeconds = TimeInterval(components.attoseconds) / 1e18
+        return seconds + fractionalSeconds
     }
 
     /// The number of microseconds per millisecond.
@@ -44,5 +53,26 @@ extension Duration {
 
     public static var microsecondsPerSecond: Int64 {
         return 1_000_000
+    }
+}
+
+extension Date {
+
+    public var millisecondsSinceNow: Int64 {
+        let duration = Duration.seconds(self.timeIntervalSinceNow)
+        return duration.inMilliseconds
+    }
+
+    public var microsecondsSinceNow: Int64 {
+        let duration = Duration.seconds(self.timeIntervalSinceNow)
+        return duration.inMicroseconds
+    }
+
+    public var isDistantFuture: Bool {
+        self >= Date.distantFuture.addingTimeInterval(-86400)
+    }
+
+    public var isDistantPast: Bool {
+        self <= Date.distantPast.addingTimeInterval(86400)
     }
 }

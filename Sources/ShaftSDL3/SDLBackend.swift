@@ -7,8 +7,7 @@ import Shaft
 import SwiftMath
 import SwiftSDL3
 
-public class SDLBackend: Backend {
-    private let tasks = TaskQueue()
+public class SDLBackend: Backend, @unchecked Sendable {
 
     public let renderer: Renderer
 
@@ -49,29 +48,50 @@ public class SDLBackend: Backend {
         assert(Thread.isMainThread)
         shouldStop = false
 
-        while true {
+        _ = RunLoop.main
+
+        mainLoop: while true {
             // process all pending events in the queue
             var event = SDL_Event()
-            if SDL_WaitEvent(&event) {
-                // mark("backend event:", String(format: "0x%02X", event.type))
+            while  SDL_PollEvent(&event) {
                 handleEvent(&event)
             }
 
-            // run all tasks
-            while let task = tasks.pop() {
-                task()
-            }
+            var time: Date? = nil
+            repeat {
+                // Execute Foundation.RunLoop once and determine the next time the timer
+                // fires.  At this point handle all Foundation.RunLoop timers, sources and
+                // Dispatch.DispatchQueue.main tasks
+                time = RunLoop.main.limitDate(forMode: .default)
+
+                // If Foundation.RunLoop doesn't contain any timers or the timers should
+                // not be running right now, we interrupt the current loop or otherwise
+                // continue to the next iteration.
+            } while !shouldStop && ((time?.timeIntervalSinceNow ?? -1) <= 0)
 
             // check if we should stop
             if shouldStop {
                 shouldStop = false
-                break
+                break mainLoop
+            }
+
+            let timeoutMS: Sint32
+            if let time, !time.isDistantFuture, !time.isDistantPast {
+                timeoutMS = Sint32(exactly: time.millisecondsSinceNow) ?? -1
+            } else {
+                timeoutMS = -1
+            }
+
+            if SDL_WaitEventTimeout(&event, timeoutMS) {
+                handleEvent(&event)
             }
         }
     }
 
     public func stop() {
-        shouldStop = true
+        RunLoop.main.perform {
+            self.shouldStop = true
+        }
         wake()
     }
 
@@ -156,7 +176,10 @@ public class SDLBackend: Backend {
     }
 
     public func postTask(_ task: @escaping () -> Void) {
-        tasks.add(task)
+        let unsafeSendableTask = UnsafeSendableBox(value: task)
+        RunLoop.main.perform {
+            unsafeSendableTask.value()
+        }
         wake()
     }
 
@@ -165,7 +188,13 @@ public class SDLBackend: Backend {
         repeat shouldRepeat: Bool = false,
         callback: @escaping () -> Void
     ) -> any Shaft.Timer {
-        return SDLTimerManager.shared.createTimer(delay, repeat: shouldRepeat, callback: callback)
+        let unsafeSendableClosure = UnsafeSendableBox(value: callback)
+        let timer = Foundation.Timer(timeInterval: delay.inTimeInterval, repeats: shouldRepeat) { timer in
+            unsafeSendableClosure.value()
+        }
+        RunLoop.main.add(timer, forMode: .default)
+        defer { wake() }
+        return timer
     }
 
     // const Uint32 myEventType = SDL_RegisterEvents(1);
@@ -748,112 +777,15 @@ private func onVsyncTimer(param: UnsafeMutableRawPointer?, timerID: SDL_TimerID,
     return 0
 }
 
-private class TaskQueue {
-    private var tasks: [() -> Void] = []
-    private var lock = NSLock()
-
-    func add(_ task: @escaping () -> Void) {
-        lock.lock()
-        defer { lock.unlock() }
-        tasks.append(task)
-    }
-
-    func pop() -> (() -> Void)? {
-        lock.lock()
-        defer { lock.unlock() }
-        return tasks.popLast()
-    }
-
-    // func isEmpty() -> Bool {
-    //     lock.lock()
-    //     defer { lock.unlock() }
-    //     return tasks.isEmpty
-    // }
+fileprivate struct UnsafeSendableBox<T>: @unchecked Sendable {
+    let value: T
 }
 
-private class SDLTimerManager {
-    
-    nonisolated(unsafe) public static let shared = SDLTimerManager()
-
-    private struct TimerEntry {
-        let delay: Duration
-        let callback: VoidCallback
-        let shouldRepeat: Bool
-    }
-
-    private var callbackByTimerID: [SDL_TimerID: TimerEntry] = [:]
-
-    public func createTimer(
-        _ delay: Duration,
-        repeat shouldRepeat: Bool = false,
-        callback: @escaping VoidCallback
-    ) -> SDLTimer {
-        assert(backend.isMainThread)
-        let timerID = SDL_AddTimer(Uint32(delay.inMilliseconds), sdlTimerCallback, nil)
-        let timer = SDLTimer(timerID)
-        callbackByTimerID[timer.timerID] = TimerEntry(
-            delay: delay,
-            callback: callback,
-            shouldRepeat: shouldRepeat
-        )
-        return timer
-    }
-
-    public func cancelTimer(_ timerID: SDL_TimerID) {
-        assert(backend.isMainThread)
-        SDL_RemoveTimer(timerID)
-        callbackByTimerID.removeValue(forKey: timerID)
-    }
-
-    public func hasTimer(_ timerID: SDL_TimerID) -> Bool {
-        return callbackByTimerID[timerID] != nil
-    }
-
-    fileprivate func fireTimer(_ timerID: SDL_TimerID) -> Uint32 {
-        guard let entry = callbackByTimerID[timerID] else {
-            return 0
-        }
-
-        if !entry.shouldRepeat {
-            callbackByTimerID.removeValue(forKey: timerID)
-        }
-
-        backend.runOnMainThread {
-            entry.callback()
-        }
-
-        // return
-        if entry.shouldRepeat {
-            return Uint32(entry.delay.inMilliseconds)
-        }
-        return 0
-    }
-
-}
-
-private func sdlTimerCallback(
-    param: UnsafeMutableRawPointer?,
-    timerID: SDL_TimerID,
-    interval: Uint32
-)
-    -> Uint32
-{
-    let manager = SDLTimerManager.shared
-    return manager.fireTimer(timerID)
-}
-
-private class SDLTimer: Shaft.Timer {
-    public let timerID: SDL_TimerID
-
-    public init(_ timerID: SDL_TimerID) {
-        self.timerID = timerID
-    }
+extension Foundation.Timer: Shaft.Timer {
 
     public func cancel() {
-        SDLTimerManager.shared.cancelTimer(timerID)
+        self.invalidate()
     }
 
-    public var isActive: Bool {
-        return SDLTimerManager.shared.hasTimer(timerID)
-    }
+    public var isActive: Bool { self.isValid }
 }
